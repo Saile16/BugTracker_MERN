@@ -20,7 +20,7 @@ const registrar = async (req, res) => {
   const existeUsuario = await Usuario.findOne({ email });
 
   if (existeUsuario) {
-    const error = new Error("El usuario ya existe");
+    const error = new Error("User already exists");
     return res.status(400).json({ msg: error.message });
   }
 
@@ -40,7 +40,7 @@ const registrar = async (req, res) => {
 
     // res.json(usuarioAlmacenado);
     res.json({
-      msg: "Usuario creado correctamente,revisa tu email para confirmar tu cuenta",
+      msg: "User created correctly, check your email to confirm your account.",
     });
   } catch (error) {
     console.log(error);
@@ -52,13 +52,13 @@ const autenticar = async (req, res) => {
   //Comprobar si el usuario existe
   const usuario = await Usuario.findOne({ email });
   if (!usuario) {
-    const error = new Error("El usuario no existe");
+    const error = new Error("The user does not exist");
     return res.status(400).json({ msg: error.message });
   }
 
   //Comprobar si el usuario está confirmado
   if (!usuario.confirmado) {
-    const error = new Error("Tu cuenta no ha sido confirmada");
+    const error = new Error("Please confirm your email");
     return res.status(400).json({ msg: error.message });
   }
 
@@ -72,7 +72,7 @@ const autenticar = async (req, res) => {
       token: generarJWT(usuario._id),
     });
   } else {
-    const error = new Error("El password es incorrecto");
+    const error = new Error("Incorrect password");
     return res.status(400).json({ msg: error.message });
   }
 };
@@ -84,7 +84,7 @@ const confirmar = async (req, res) => {
   const usuarioConfirmar = await Usuario.findOne({ token });
 
   if (!usuarioConfirmar) {
-    const error = new Error("Token no valido");
+    const error = new Error("Invalid Token");
     return res.status(403).json({ msg: error.message });
   }
 
@@ -92,7 +92,7 @@ const confirmar = async (req, res) => {
     usuarioConfirmar.confirmado = true;
     usuarioConfirmar.token = "";
     await usuarioConfirmar.save();
-    res.json({ msg: "Usuario confirmado correctamente" });
+    res.json({ msg: "User confirmed successfully" });
   } catch (error) {
     console.log(error);
   }
@@ -104,7 +104,7 @@ const olvidePassword = async (req, res) => {
   //Comprobar si el usuario existe
   const usuario = await Usuario.findOne({ email });
   if (!usuario) {
-    const error = new Error("El usuario no existe");
+    const error = new Error("User does not exist");
     return res.status(400).json({ msg: error.message });
   }
 
@@ -118,7 +118,7 @@ const olvidePassword = async (req, res) => {
       nombre: usuario.nombre,
       token: usuario.token,
     });
-    res.json({ msg: "Hemos enviado un email con las instrucciones" });
+    res.json({ msg: "We have sent an email with the instructions" });
     console.log(usuario);
   } catch (error) {
     console.log(error);
@@ -131,9 +131,9 @@ const comprobarToken = async (req, res) => {
 
   const tokenValido = await Usuario.findOne({ token });
   if (tokenValido) {
-    res.json({ msg: "Token valido y el Usuario existe" });
+    res.json({ msg: "Valid token and User exists" });
   } else {
-    const error = new Error("Token no valido");
+    const error = new Error("Invalid Token");
     return res.status(400).json({ msg: error.message });
   }
 };
@@ -149,13 +149,13 @@ const nuevoPassword = async (req, res) => {
     usuario.token = "";
     try {
       await usuario.save();
-      res.json({ msg: "Password actualizado correctamente" });
+      res.json({ msg: "Password updated successfully" });
     } catch (error) {
       console.log(error);
     }
     // console.log(usuario);
   } else {
-    const error = new Error("Token no valido");
+    const error = new Error("Invalid Token");
     return res.status(400).json({ msg: error.message });
   }
 };

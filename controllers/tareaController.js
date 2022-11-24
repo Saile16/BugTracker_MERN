@@ -7,12 +7,12 @@ const agregarTarea = async (req, res) => {
   const existeProyecto = await Proyecto.findById(proyecto);
 
   if (!existeProyecto) {
-    const error = new Error("El proyecto no existe");
+    const error = new Error("Project doesn't exist");
     return res.status(404).json({ msg: error.message });
   }
 
   if (existeProyecto.creador.toString() !== req.usuario._id.toString()) {
-    const error = new Error("No tienes permisos para añadir tareas");
+    const error = new Error("You do not have permissions to add tasks");
     return res.status(401).json({ msg: error.message });
   }
 
@@ -36,11 +36,11 @@ const obtenerTareas = async (req, res) => {
   const tarea = await Tarea.findById(id).populate("proyecto");
 
   if (!tarea) {
-    const error = new Error("La tarea no existe");
+    const error = new Error("The task does not exist");
     return res.status(404).json({ msg: error.message });
   }
   if (tarea.proyecto.creador.toString() !== req.usuario._id.toString()) {
-    const error = new Error("Acción no válida");
+    const error = new Error("Invalid Action");
     return res.status(403).json({ msg: error.message });
   }
 
@@ -53,11 +53,11 @@ const actualizarTarea = async (req, res) => {
   const tarea = await Tarea.findById(id).populate("proyecto");
 
   if (!tarea) {
-    const error = new Error("La tarea no existe");
+    const error = new Error("The task does not exist");
     return res.status(404).json({ msg: error.message });
   }
   if (tarea.proyecto.creador.toString() !== req.usuario._id.toString()) {
-    const error = new Error("Acción no válida");
+    const error = new Error("Invalid Action");
     return res.status(403).json({ msg: error.message });
   }
 
@@ -79,11 +79,11 @@ const eliminarTarea = async (req, res) => {
     //el populate es para traer los datos del proyecto como en este caso el creador
     const tarea = await Tarea.findById(id.trim()).populate("proyecto");
     if (!tarea) {
-      const error = new Error("La tarea no existe");
+      const error = new Error("The task does not exist");
       return res.status(404).json({ msg: error.message });
     }
     if (tarea.proyecto.creador.toString() !== req.usuario._id.toString()) {
-      const error = new Error("Acción no válida");
+      const error = new Error("Invalid Action");
       return res.status(403).json({ msg: error.message });
     }
 
@@ -96,12 +96,12 @@ const eliminarTarea = async (req, res) => {
         await tarea.deleteOne(),
       ]);
 
-      res.json({ msg: "La Tarea ha sido eliminada" });
+      res.json({ msg: "Task has been deleted" });
     } catch (error) {
       console.log(error);
     }
   } else {
-    const error = new Error("Id no válido");
+    const error = new Error("Invalid Id");
     return res.status(404).json({ msg: error.message });
   }
 };
@@ -112,7 +112,7 @@ const cambiarEstadoTarea = async (req, res) => {
     const tarea = await Tarea.findById(id.trim()).populate("proyecto");
 
     if (!tarea) {
-      const error = new Error("La tarea no existe");
+      const error = new Error("The task does not exist");
       return res.status(404).json({ msg: error.message });
     }
 
@@ -123,7 +123,7 @@ const cambiarEstadoTarea = async (req, res) => {
           colaborador._id.toString() === req.usuario._id.toString()
       )
     ) {
-      const error = new Error("Acción no válida");
+      const error = new Error("Invalid Action");
       return res.status(403).json({ msg: error.message });
     }
 
@@ -136,7 +136,7 @@ const cambiarEstadoTarea = async (req, res) => {
 
     res.json(tareaAlmacenada);
   } else {
-    const error = new Error("Id no válido");
+    const error = new Error("Invalid Id");
     return res.status(404).json({ msg: error.message });
   }
 };

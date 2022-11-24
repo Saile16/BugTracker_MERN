@@ -71,12 +71,12 @@ const editarProyecto = async (req, res) => {
   const proyecto = await Proyecto.findById(id);
 
   if (!proyecto) {
-    const error = new Error("Proyecto no encontrado");
+    const error = new Error("Project not found");
     return res.status(404).json({ msg: error.message });
   }
 
   if (proyecto.creador.toString() !== req.usuario._id.toString()) {
-    const error = new Error("Acción no válida");
+    const error = new Error("Invalid Cction");
     return res.status(401).json({ msg: error.message });
   }
 
@@ -99,18 +99,18 @@ const eliminarProyecto = async (req, res) => {
   const proyecto = await Proyecto.findById(id);
 
   if (!proyecto) {
-    const error = new Error("Proyecto no encontrado");
+    const error = new Error("Project not found");
     return res.status(404).json({ msg: error.message });
   }
 
   if (proyecto.creador.toString() !== req.usuario._id.toString()) {
-    const error = new Error("Acción no válida");
+    const error = new Error("Invalid Action");
     return res.status(401).json({ msg: error.message });
   }
 
   try {
     await proyecto.deleteOne();
-    res.json({ msg: "Proyecto eliminado" });
+    res.json({ msg: "Deleted Project" });
   } catch (error) {
     console.log(error);
   }
@@ -123,7 +123,7 @@ const buscarColaborador = async (req, res) => {
   );
 
   if (!usuario) {
-    const error = new Error("Usuario no encontrado");
+    const error = new Error("User not found");
     return res.status(404).json({ msg: error.message });
   }
 
@@ -134,12 +134,12 @@ const agregarColaborador = async (req, res) => {
   const proyecto = await Proyecto.findById(req.params.id);
 
   if (!proyecto) {
-    const error = new Error("Proyecto no encontrado");
+    const error = new Error("Project not found");
     return res.status(404).json({ msg: error.message });
   }
 
   if (proyecto.creador.toString() !== req.usuario._id.toString()) {
-    const error = new Error("Acción no válida");
+    const error = new Error("Invalid Action");
     return res.status(401).json({ msg: error.message });
   }
 
@@ -149,40 +149,38 @@ const agregarColaborador = async (req, res) => {
   );
 
   if (!usuario) {
-    const error = new Error("Usuario no encontrado");
+    const error = new Error("User not found");
     return res.status(404).json({ msg: error.message });
   }
 
   //El colaborador no es el admin del proyecto
   if (proyecto.creador.toString() === usuario._id.toString()) {
-    const error = new Error(
-      "El creador no puede ser el colaborador del proyecto"
-    );
+    const error = new Error("The owner cannot be the project collaborator");
     return res.status(401).json({ msg: error.message });
   }
 
   //Revisar que no este ya agregado al proyecto
   if (proyecto.colaboradores.includes(usuario._id)) {
-    const error = new Error("El usuario ya esta agregado al proyecto");
+    const error = new Error("The user is already added to the project");
     return res.status(401).json({ msg: error.message });
   }
 
   ///Agregar ahora al colaborador
   proyecto.colaboradores.push(usuario._id);
   await proyecto.save();
-  res.json({ msg: "Colabor agregado Correctamente" });
+  res.json({ msg: "User added successfully" });
 };
 
 const eliminarColaborador = async (req, res) => {
   const proyecto = await Proyecto.findById(req.params.id);
 
   if (!proyecto) {
-    const error = new Error("Proyecto no encontrado");
+    const error = new Error("Project not found");
     return res.status(404).json({ msg: error.message });
   }
 
   if (proyecto.creador.toString() !== req.usuario._id.toString()) {
-    const error = new Error("Acción no válida");
+    const error = new Error("Invalid Action");
     return res.status(401).json({ msg: error.message });
   }
 
@@ -190,7 +188,7 @@ const eliminarColaborador = async (req, res) => {
 
   proyecto.colaboradores.pull(req.body.id);
   await proyecto.save();
-  res.json({ msg: "Colaborador Eliminado Correctamente" });
+  res.json({ msg: "User Removed Successfully" });
 };
 
 export {

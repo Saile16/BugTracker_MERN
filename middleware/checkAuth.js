@@ -19,12 +19,12 @@ const checkAuth = async (req, res, next) => {
       //   console.log(req.usuario);
       return next();
     } catch (error) {
-      return res.status(404).json({ msg: "Hubo un error" });
+      return res.status(404).json({ msg: "There was a mistake" });
     }
   }
 
   if (!token) {
-    const error = new Error("Token no valido");
+    const error = new Error("Invalid Token");
     return res.status(400).json({ msg: error.message });
   }
   //funciones de express next para que vaya a la siguiente funcion en este caso
